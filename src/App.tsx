@@ -4,7 +4,8 @@ import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './context/ThemeProvider/ThemeProvaider';
 import { useTheme } from './context/ThemeHooks/useTheme';
 import TodoList from './components/TodoList/TodoList';
-import { useState } from 'react';
+
+
 
 
 
@@ -34,29 +35,30 @@ const InnerApp = () => {
   );
 };
 
-const Counter =()=>{
-   const [count, setCount] = useState(0);
-   const ocClick = () => {
-    setCount(count + 1);
-    setCount(count + 1);
-   }
-   return(
-    <>
-        <p>{count}</p>
-        <button onClick={ocClick}>+</button> 
-    </>
-   )
-  
-}
 
 
 function App() {
   return (
     <ThemeProvider>
       <InnerApp />
-      <Counter/>
     </ThemeProvider>
   );
 }
 
 export default App;
+
+
+// const Counter =()=>{
+//    const [count, setCount] = useState(0);
+//    const ocClick = () => {
+//     setCount(count + 1);
+//     setCount(count + 1);
+//    }
+//    return(
+//     <>
+//         <p>{count}</p>
+//         <button onClick={ocClick}>+</button> 
+//     </>
+//    )
+  
+// }

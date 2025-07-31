@@ -3,45 +3,63 @@ import type { Todo } from '../../types/Todo'
 
 import AddTodo from '../AddTodo/AddTodo';
 import TodoItem from '../TodoItem/TodoItem';
+import PaginationBlock from '../Pagination/Pagination';
 import styled from 'styled-components';
-import { loadTodos, saveTodos } from '../../utils/localStorage';
+import { saveTodos } from '../../utils/localStorage';
+import { createTodo, fetchTodos } from '../../api/todos';
 
 
 
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  //флаг, что бы отлечить первую зарузку от последующих
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  
 
-//пераый редер
-  useEffect(() => {
-    setTodos(loadTodos());
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tasksPerPage, setTasksPerPage] = useState(5);
 
+  // const [page, setPage] = useState(1);
+
+  // Загрузка задач с сервера
+useEffect(() => {
+  fetchTodos(currentPage)
+    .then(data => setTodos(data))
+    .catch(err => console.error('Ошибка загрузки задач:', err));
+}, [currentPage]);
+
+  // Сохраняем изменения
   useEffect(() => {
     if (isInitialLoad) {
       setIsInitialLoad(false);
       return;
     }
     saveTodos(todos);
-  }, [todos,isInitialLoad]);
+  }, [todos, isInitialLoad]);
 
-  const addTodo = (text: string) => {
-    const newTodo: Todo = {
-      id: Date.now(),// возращает количество миллисекунд 
-      text,
-      completed: false,
-      createdAt: new Date(),
-    };
-    setTodos([newTodo, ...todos]);
-  };
+ const addTodo = async (text: string) => {
+  const newTodo = await createTodo(text);
+  setTodos(prev => [newTodo, ...prev]);
+};
+
+  const indexOfLast = currentPage * tasksPerPage;
+  const indexOfFirst = indexOfLast - tasksPerPage;
+  const currentTodos = todos.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(todos.length / tasksPerPage);
 
   return (
     <Wrapper>
       <h1>Список задач</h1>
       <AddTodo onAdd={addTodo} />
-      <TodoItem todos={todos} setTodos={setTodos} />
+      <TodoItem todos={currentTodos} setTodos={setTodos} />
+      <PaginationBlock
+        currentPage={currentPage}
+        totalPages={totalPages}
+        tasksPerPage={tasksPerPage}
+        onPageChange={(value) => setCurrentPage(value)}
+        onLimitChange={(value) => {
+          setTasksPerPage(value);
+          setCurrentPage(1);
+        }}
+      />
     </Wrapper>
   );
 };
@@ -49,7 +67,7 @@ const TodoList: React.FC = () => {
 export default TodoList;
 
 export const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `

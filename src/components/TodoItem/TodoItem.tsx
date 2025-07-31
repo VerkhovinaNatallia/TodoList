@@ -3,6 +3,7 @@ import type {Todo}  from '../../types/Todo';
 import EditTodo from '../EditTodo/EditTodo';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeHooks/useTheme';
+import { deleteTodo, toggleTodo } from '../../api/todos';
 
 
 interface Props {
@@ -16,16 +17,26 @@ const TodoItem: React.FC<Props> = ({ todos, setTodos }) => {
   const [editText, setEditText] = useState('');
   const [sortOrder, setSortOrder] = useState<'new' | 'old'>('new');
 
-  const toggleComplete = (id: number) => {
-    //выполненая задача(статус)
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-  };
+  // const toggleComplete = (id: number) => {
+  //   //выполненая задача(статус)
+  //   setTodos(todos.map(todo =>
+  //     todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  //   ));
+  // };
+  const handleToggle = async (id: number) => {
+  const updated = await toggleTodo(id);
+  setTodos(prev =>
+    prev.map(todo => (todo.id === id ? updated : todo))
+  );
+};
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
+  // const deleteTodo = (id: number) => {
+  //   setTodos(todos.filter(todo => todo.id !== id));
+  // };
+  const handleDelete = async (id: number) => {
+  await deleteTodo(id);
+  setTodos(prev => prev.filter(todo => todo.id !== id));
+};
 
   const startEdit = (id: number, text: string) => {
     setEditId(id);
@@ -65,7 +76,7 @@ const TodoItem: React.FC<Props> = ({ todos, setTodos }) => {
 ) : (
               <>
                 <span
-                  onClick={() => toggleComplete(todo.id)}
+                  onClick={() => handleToggle(todo.id)}
                   style={{
                     textDecoration: todo.completed ? 'line-through' : 'none',
                     cursor: 'pointer',
@@ -74,7 +85,7 @@ const TodoItem: React.FC<Props> = ({ todos, setTodos }) => {
                   {todo.text}
                 </span>
                 <button onClick={() => startEdit(todo.id, todo.text)}>Редактировать</button>
-                <button onClick={() => deleteTodo(todo.id)}>Удалить</button>
+                <button onClick={() => handleDelete(todo.id)}>Удалить</button>
               </>
             )}
           </li>
