@@ -1,164 +1,119 @@
 import React, { useState } from 'react';
-import type {Todo}  from '../../types/Todo';
+import { useAppDispatch } from '../../store/store';
+import { toggleTodo, deleteTodo, updateTodo, type Todo } from '../../store/todosSlice';
 import EditTodo from '../EditTodo/EditTodo';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeHooks/useTheme';
-import { deleteTodo, toggleTodo } from '../../api/todos';
 
-
-interface Props {
-  todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+interface TodoItemProps {
+  todo: Todo;
 }
 
-const TodoItem: React.FC<Props> = ({ todos, setTodos }) => {
-    const { theme } = useTheme();
-  const [editId, setEditId] = useState<number | null>(null);
-  const [editText, setEditText] = useState('');
-  const [sortOrder, setSortOrder] = useState<'new' | 'old'>('new');
+const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+  const dispatch = useAppDispatch();
+  const {theme} = useTheme();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(todo.text);
 
-  // const toggleComplete = (id: number) => {
-  //   //выполненая задача(статус)
-  //   setTodos(todos.map(todo =>
-  //     todo.id === id ? { ...todo, completed: !todo.completed } : todo
-  //   ));
-  // };
-  const handleToggle = async (id: number) => {
-  const updated = await toggleTodo(id);
-  setTodos(prev =>
-    prev.map(todo => (todo.id === id ? updated : todo))
-  );
-};
-
-  // const deleteTodo = (id: number) => {
-  //   setTodos(todos.filter(todo => todo.id !== id));
-  // };
-  const handleDelete = async (id: number) => {
-  await deleteTodo(id);
-  setTodos(prev => prev.filter(todo => todo.id !== id));
-};
-
-  const startEdit = (id: number, text: string) => {
-    setEditId(id);
-    setEditText(text);
+  const handleSave = () => {
+    if (editText.trim() !== '') {
+      dispatch(updateTodo({ 
+        id: todo.id, 
+        updates: { text: editText } 
+      }));
+      setIsEditing(false);
+    }
   };
-
-  const saveEdit = (id: number) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, text: editText } : todo
-    ));
-    setEditId(null);
-    setEditText('');
-  };
-
-  const sortedTodos = [...todos].sort((a, b) =>
-    sortOrder === 'new'
-      ? b.createdAt.getTime() - a.createdAt.getTime()
-      : a.createdAt.getTime() - b.createdAt.getTime()
-  );
 
   return (
-    <Wrapper theme={theme}>
-      <select onChange={(e) => setSortOrder(e.target.value as 'new' | 'old')}>
-        <option value="new">Новые сначала</option>
-        <option value="old">Старые сначала</option>
-      </select>
+    <Wrapper theme = {theme}>
+      {isEditing ? (
+        <EditTodo
+          text={editText}
+          onChange={setEditText}
+          onSave={handleSave}
+          onCancel={() => setIsEditing(false)}
+        />
+      ) : (
+        <>
+          <div>
+          
+            <TodoText theme={theme} completed={todo.completed}
+              onClick={() => dispatch(toggleTodo(todo.id))
+                
+              }
+            >
+              {todo.text}
+            </TodoText>
+          </div>
+          <div className='btn--block'>
+            <button className='btn--edit'
+            
+              onClick={() => {
+                setIsEditing(true);
+                setEditText(todo.text);
+              }}
+            >
+              Редактировать
 
-      <ul>
-        {sortedTodos.map(todo => (
-          <li key={todo.id}>
-            {editId === todo.id ? (
-  <EditTodo
-    text={editText}
-    onChange={setEditText}
-    onSave={() => saveEdit(todo.id)}
-  />
-) : (
-              <>
-                <span
-                  onClick={() => handleToggle(todo.id)}
-                  style={{
-                    textDecoration: todo.completed ? 'line-through' : 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {todo.text}
-                </span>
-                <button onClick={() => startEdit(todo.id, todo.text)}>Редактировать</button>
-                <button onClick={() => handleDelete(todo.id)}>Удалить</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-    </Wrapper>
+            </button>
+            <button className='btn--delete'
+              onClick={() => dispatch(deleteTodo(todo.id))}
+            >
+              Удалить
+            </button>
+            </div>
+        </>
+      )}
+      </Wrapper>
   );
 };
 
 export default TodoItem;
 
-
 interface ThemeProps {
   theme: 'light' | 'dark';
 }
 
+interface TodoTextProps extends ThemeProps {
+  completed: boolean;
+}
+
+
+const TodoText = styled.span<TodoTextProps>`
+  margin-left: 8px;
+  text-decoration: ${(props) => (props.completed ? 'line-through' : 'none')};
+  color: ${(props) => {
+    if (props.completed) {
+      return props.theme === 'dark' ? '#666' : '#999';
+    }
+    return props.theme === 'dark' ? '#ccc' : '#000';
+  }};
+`;
+
 export const Wrapper = styled.div<ThemeProps>`
-  padding: 24px;
-  border-radius: 12px;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: ${({ theme }) =>
-    theme === 'dark' ? '0 4px 12px rgba(255, 255, 255, 0.1)' : '0 4px 12px rgba(0, 0, 0, 0.1)'};
-  background-color: ${({ theme }) => (theme === 'dark' ? '#1e1e1e' : '#f9f9f9')};
-  color: ${({ theme }) => (theme === 'dark' ? '#f0f0f0' : '#333')};
-
-  select {
-    margin-bottom: 20px;
-    padding: 8px 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid ${({ theme }) => (theme === 'dark' ? '#444' : '#ccc')};
-    background-color: ${({ theme }) => (theme === 'dark' ? '#2c2c2c' : '#fff')};
-    color: ${({ theme }) => (theme === 'dark' ? '#ddd' : '#333')};
-    outline: none;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-
-    li {
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: ${({ theme }) => (theme === 'dark' ? '#2a2a2a' : '#fff')};
-      padding: 12px 16px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-
-      span {
-        flex-grow: 1;
-        font-size: 16px;
-        cursor: pointer;
-        color: ${({ theme }) => (theme === 'dark' ? '#ccc' : '#333')};
-        word-break: break-all;
-
-        &.completed {
-          text-decoration: line-through;
-          color: ${({ theme }) => (theme === 'dark' ? '#666' : '#999')};
-        }
-      }
-
-      button {
+  margin-bottom: 12px;
+  display: flex;
+  height: 80px;
+  align-items: center;
+  justify-content: space-between;border: 1px solid ${({ theme }) => (theme === 'dark' ? '#555' : '#ccc')};
+  background-color: ${({ theme }) => (theme === 'dark' ? '#2c2c2c' : '#fff')};
+  color: ${({ theme }) => (theme === 'dark' ? '#eee' : '#333')};
+  padding: 12px 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  
+  .btn--block{
+      
+       .btn--edit,.btn--delete{
         margin-left: 8px;
-        padding: 6px 10px;
+        padding: 12px 20px;
         font-size: 14px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-
-        &:first-of-type {
+       }
+        .btn--edit{
           background-color: #4caf50;
           color: white;
 
@@ -166,8 +121,7 @@ export const Wrapper = styled.div<ThemeProps>`
             background-color:#1976d2;
           }
         }
-
-        &:last-of-type {
+        .btn--delete{
           background-color: #f44336;
           color: white;
 
@@ -176,6 +130,5 @@ export const Wrapper = styled.div<ThemeProps>`
           }
         }
       }
-    }
-  }
 `;
+

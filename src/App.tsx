@@ -4,6 +4,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './context/ThemeProvider/ThemeProvaider';
 import { useTheme } from './context/ThemeHooks/useTheme';
 import TodoList from './components/TodoList/TodoList';
+import { Container } from '@mui/material';
 
 
 
@@ -29,7 +30,9 @@ const InnerApp = () => {
     <StyledThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <AppContainer>
         <ThemeToggle />
-        <TodoList/>
+        <Container>
+          <TodoList/>
+        </Container>
       </AppContainer>
     </StyledThemeProvider>
   );
@@ -46,6 +49,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 // const Counter =()=>{
