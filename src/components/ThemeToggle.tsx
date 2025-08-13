@@ -1,33 +1,30 @@
-import { useTheme } from '../context/ThemeHooks/useTheme';
-import styled from 'styled-components';
+import { useTheme } from "@context/ThemeHooks/useTheme";
+import styled from "styled-components";
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
     <ThemedButton theme={theme} onClick={toggleTheme}>
-      Переключить на {theme === 'light' ? '🌙 Темную' : '☀️ Светлую'} тему
+      Переключить на {theme === "light" ? "🌙 Темную" : "☀️ Светлую"} тему
     </ThemedButton>
   );
 };
 
 export default ThemeToggle;
 
-
-
-const ThemedButton = styled.button<{ theme: 'light' | 'dark' }>`
+const ThemedButton = styled.button<{ theme: "light" | "dark" }>`
   padding: 10px 16px;
   font-size: 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
-
-  /* Инвертируем фон и текст */
-  background-color: ${({ theme }) => (theme === 'light' ? 'black' : 'white')};
-  color: ${({ theme }) => (theme === 'light' ? 'white' : 'black')};
+  background-color: ${({ theme }) => (theme === "light" ? "black" : "white")};
+  color: ${({ theme }) => (theme === "light" ? "white" : "black")};
 
   &:hover {
-    background-color: ${({ theme }) => (theme === 'light' ? '#222' : '#f0f0f0')};
+    background-color: ${({ theme }) =>
+      theme === "light" ? "#222" : "#f0f0f0"};
   }
 `;

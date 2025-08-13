@@ -1,5 +1,15 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { fetchTodosApi, createTodoApi, deleteTodoApi, updateTodoApi, toggleTodoApi } from '../api/todos';
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+import {
+  fetchTodosApi,
+  createTodoApi,
+  deleteTodoApi,
+  updateTodoApi,
+  toggleTodoApi,
+} from "@/api/todos";
 
 export interface Todo {
   id: number;
@@ -11,10 +21,10 @@ interface TodosState {
   items: Todo[];
   isLoading: boolean;
   error: string | null;
-  currentPage: number;    
-  totalPages: number;     
-  itemsPerPage: number;   
-  totalCount: number;     
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  totalCount: number;
 }
 
 const initialState: TodosState = {
@@ -27,85 +37,92 @@ const initialState: TodosState = {
   totalCount: 0,
 };
 
-//загрузки задач
 export const fetchTodos = createAsyncThunk(
-  'todos/fetchTodos',
+  "todos/fetchTodos",
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState() as { todos: TodosState };
-      const { currentPage, itemsPerPage} = state.todos;
+      const { currentPage, itemsPerPage } = state.todos;
       return await fetchTodosApi(currentPage, itemsPerPage);
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : 'Unknown error');
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Unknown error"
+      );
     }
   }
 );
-//создания задачи
 export const createTodo = createAsyncThunk(
-  'todos/createTodo',
+  "todos/createTodo",
   async (text: string, { rejectWithValue }) => {
     try {
       return await createTodoApi(text);
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : 'Unknown error');
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Unknown error"
+      );
     }
   }
 );
 
-//удаления задачи
 export const deleteTodo = createAsyncThunk(
-  'todos/deleteTodo',
+  "todos/deleteTodo",
   async (id: number, { rejectWithValue }) => {
     try {
       await deleteTodoApi(id);
       return id;
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : 'Unknown error');
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Unknown error"
+      );
     }
   }
 );
 
-
-//обновления задачи
 export const updateTodo = createAsyncThunk(
-  'todos/updateTodo',
-  async ({ id, updates }: { id: number; updates: Partial<Todo> }, { rejectWithValue }) => {
+  "todos/updateTodo",
+  async (
+    { id, updates }: { id: number; updates: Partial<Todo> },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await updateTodoApi(id, updates);
       return response;
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : 'Unknown error');
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Unknown error"
+      );
     }
   }
 );
 
-//переключения статуса задачи
 export const toggleTodo = createAsyncThunk(
-  'todos/toggleTodo',
+  "todos/toggleTodo",
   async (id: number, { rejectWithValue }) => {
     try {
       const response = await toggleTodoApi(id);
       return response;
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : 'Unknown error');
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Unknown error"
+      );
     }
   }
 );
 
 const todosSlice = createSlice({
-  name: 'todos',
+  name: "todos",
   initialState,
   reducers: {
     clearError(state) {
       state.error = null;
     },
     setCurrentPage(state, action: PayloadAction<number>) {
-    state.currentPage = action.payload;
-  },
-  setItemsPerPage(state, action: PayloadAction<number>) {
-    state.itemsPerPage = action.payload;
-    state.currentPage = 1; 
-  },
+      state.currentPage = action.payload;
+    },
+    setItemsPerPage(state, action: PayloadAction<number>) {
+      state.itemsPerPage = action.payload;
+      state.currentPage = 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -113,42 +130,40 @@ const todosSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-.addCase(fetchTodos.fulfilled, (state, action) => {
-  state.isLoading = false;
-  state.items = action.payload.data;
-  state.totalCount = action.payload.totalCount;
-  state.currentPage = action.payload.page;
-  state.itemsPerPage = action.payload.limit;
-  state.totalPages = action.payload.totalPages;
-})
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.items = action.payload.data;
+        state.totalCount = action.payload.totalCount;
+        state.currentPage = action.payload.page;
+        state.itemsPerPage = action.payload.limit;
+        state.totalPages = action.payload.totalPages;
+      })
       .addCase(fetchTodos.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      
-   
-      
-    .addCase(createTodo.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    })
-   .addCase(createTodo.fulfilled, (state, action) => {
-  state.isLoading = false;
-  state.items = [action.payload, ...state.items];
-  state.totalCount += 1;
-  state.totalPages = Math.ceil(state.totalCount / state.itemsPerPage);
-})
-    .addCase(createTodo.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload as string;
-    })
+
+      .addCase(createTodo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createTodo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.items = [action.payload, ...state.items];
+        state.totalCount += 1;
+        state.totalPages = Math.ceil(state.totalCount / state.itemsPerPage);
+      })
+      .addCase(createTodo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
       .addCase(deleteTodo.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(deleteTodo.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.items = state.items.filter(todo => todo.id !== action.payload);
+        state.items = state.items.filter((todo) => todo.id !== action.payload);
       })
       .addCase(deleteTodo.rejected, (state, action) => {
         state.isLoading = false;
@@ -160,7 +175,9 @@ const todosSlice = createSlice({
       })
       .addCase(updateTodo.fulfilled, (state, action) => {
         state.isLoading = false;
-        const index = state.items.findIndex(todo => todo.id === action.payload.id);
+        const index = state.items.findIndex(
+          (todo) => todo.id === action.payload.id
+        );
         if (index !== -1) {
           state.items[index] = action.payload;
         }
@@ -175,7 +192,9 @@ const todosSlice = createSlice({
       })
       .addCase(toggleTodo.fulfilled, (state, action) => {
         state.isLoading = false;
-        const index = state.items.findIndex(todo => todo.id === action.payload.id);
+        const index = state.items.findIndex(
+          (todo) => todo.id === action.payload.id
+        );
         if (index !== -1) {
           state.items[index] = action.payload;
         }
@@ -187,9 +206,6 @@ const todosSlice = createSlice({
   },
 });
 
-export const { 
-  clearError, 
-  setCurrentPage, 
-  setItemsPerPage 
-} = todosSlice.actions;
+export const { clearError, setCurrentPage, setItemsPerPage } =
+  todosSlice.actions;
 export default todosSlice.reducer;

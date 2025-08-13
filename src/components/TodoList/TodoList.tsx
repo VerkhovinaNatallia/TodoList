@@ -1,78 +1,33 @@
-import React, { useEffect} from 'react';
+import { type FC } from 'react';
 import styled from 'styled-components';
-import { useAppDispatch, useAppSelector } from '../../store/store';
-import {
-  fetchTodos,
-  createTodo,
-  setCurrentPage,
-  setItemsPerPage,
-} from '../../store/todosSlice';
-import AddTodo from '../AddTodo/AddTodo';
-import TodoItem from '../TodoItem/TodoItem';
-import PaginationControls from '../TodoPagination/TodoPagination';
-import type { SelectChangeEvent } from '@mui/material';
+import { useTodoListLogic } from '../../hooks/useTodosLogic';
+import AddTodo from '@components/AddTodo/AddTodo';
+import TodoItem from '@components/TodoItem/TodoItem';
+import PaginationControls from '@components/TodoPagination/TodoPagination';
+import { fetchTodos } from '@store/todosSlice';
+import { useAppDispatch } from '../../store/store';
 
 
-const TodoList: React.FC = () => {
+const TodoList: FC = () => {
   const dispatch = useAppDispatch();
   const {
-    items: todos,
+    items:todos,
     isLoading,
     error,
     currentPage,
     totalPages,
     itemsPerPage,
     totalCount,
-  } = useAppSelector((state) => state.todos);
-
-  useEffect(() => { 
-    const loadData = async () => {
-      try {
-        await dispatch(fetchTodos()).unwrap();
-      } catch (err) {
-        console.error('Ошибка загрузки:', err);
-      }
-    };
-
-    loadData();
-
-    return () => {};
-  }, [dispatch, currentPage, itemsPerPage]);
-
-
-
-  const handleAddTodo = async (text: string) => {
-    if (!text.trim()) return;
-    
-    try {
-      await dispatch(createTodo(text)).unwrap();
-      
-      if (currentPage !== 1) {
-        dispatch(setCurrentPage(1));
-      }
-    } catch (err) {
-      console.error('Ошибка при добавлении:', err);
-    }
-  };
-
-  const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    dispatch(setCurrentPage(page));
-  };
-
-  const handleItemsPerPageChange = (event: SelectChangeEvent<number>) => {
-    dispatch(setItemsPerPage(Number(event.target.value)));
-    dispatch(setCurrentPage(1));
-  };
+    handleAddTodo,
+    handlePageChange,
+    handleItemsPerPageChange,
+  } = useTodoListLogic();
 
   if (error) {
     return (
       <Container>
-        <div className='errormessage'>
-          {error}
-        </div>
-        <button className='retry'
-          onClick={() => dispatch(fetchTodos())}
-        >
+        <div className='errormessage'>{error}</div>
+        <button className='retry' onClick={() => dispatch(fetchTodos())}>
           Повторить попытку
         </button>
       </Container>
@@ -82,27 +37,25 @@ const TodoList: React.FC = () => {
   return (
     <Container>
       <h1>Список задач</h1>
-
       <AddTodo onAdd={handleAddTodo} />
-
+      
       {isLoading ? (
         <div className='loading'>
           <p>Загрузка задач...</p>
         </div>
       ) : todos.length === 0 ? (
-        <div className = 'emptyTodos'>
+        <div className='emptyTodos'>
           <h2>Нет задач</h2>
           <p>Начните с добавления новой задачи</p>
         </div>
       ) : (
         <>
-
           <ul className='todos__conteiner'>
             {todos.map((todo) => (
               <TodoItem key={todo.id} todo={todo} />
             ))}
           </ul>
-
+          
           {totalCount > 1 && (
             <PaginationControls
               currentPage={currentPage}
@@ -208,4 +161,3 @@ const Container = styled.div`
       }
   }
 `;
-

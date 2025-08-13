@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { type FC } from "react";
+import { TextField, Button, Box } from "@mui/material";
 
 interface EditTodoProps {
   text: string;
@@ -8,14 +8,14 @@ interface EditTodoProps {
   onCancel: () => void;
 }
 
-const EditTodo: React.FC<EditTodoProps> = ({ 
-  text, 
-  onChange, 
-  onSave, 
-  onCancel 
+const EditTodo: FC<EditTodoProps> = ({
+  text,
+  onChange,
+  onSave,
+  onCancel,
 }) => {
   return (
-    <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+    <Box sx={{ display: "flex", gap: 1, width: "100%" }}>
       <TextField
         value={text}
         onChange={(e) => onChange(e.target.value)}

@@ -1,4 +1,4 @@
-import React from 'react';
+import { type ChangeEvent, type FC } from "react";
 import {
   Box,
   Typography,
@@ -7,19 +7,19 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from '@mui/material';
-import { type SelectChangeEvent } from '@mui/material/Select';
+} from "@mui/material";
+import { type SelectChangeEvent } from "@mui/material/Select";
 interface PaginationControlsProps {
-  currentPage: number;//активная страница
-  totalPages: number;//всего страниц
-  itemsPerPage: number;//количество эл-тов на странице 
-  totalCount: number;//всего элементов
-  isLoading: boolean;//флаг загрузки
-  onPageChange: (event: React.ChangeEvent<unknown>, page: number) => void;
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  totalCount: number;
+  isLoading: boolean; 
+  onPageChange: (event: ChangeEvent<unknown>, page: number) => void;
   onItemsPerPageChange: (event: SelectChangeEvent<number>) => void;
 }
 
-const PaginationControls: React.FC<PaginationControlsProps> = ({
+const PaginationControls: FC<PaginationControlsProps> = ({
   currentPage,
   totalPages,
   itemsPerPage,
@@ -34,16 +34,16 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap",
         gap: 2,
         mt: 2,
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        всего {Math.ceil(totalCount/itemsPerPage)} страниц
+        всего {Math.ceil(totalCount / itemsPerPage)} страниц
       </Typography>
 
       <Pagination
@@ -54,7 +54,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         disabled={isLoading}
         showFirstButton
         showLastButton
-        sx={{ flexGrow: 1, justifyContent: 'center' }}
+        sx={{ flexGrow: 1, justifyContent: "center" }}
       />
 
       <FormControl size="small" disabled={isLoading} sx={{ minWidth: 120 }}>
@@ -62,7 +62,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         <Select
           value={itemsPerPage}
           label="На странице"
-          onChange={handleItemsPerPageChange }
+          onChange={handleItemsPerPageChange}
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={10}>10</MenuItem>

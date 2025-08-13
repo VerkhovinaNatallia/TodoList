@@ -1,30 +1,26 @@
-import React, { useState } from 'react';
-import { useAppDispatch } from '../../store/store';
-import { toggleTodo, deleteTodo, updateTodo, type Todo } from '../../store/todosSlice';
-import EditTodo from '../EditTodo/EditTodo';
+import {  type FC } from 'react';
+import { useAppDispatch } from '@store/store';
+import { toggleTodo, deleteTodo} from '@store/todosSlice';
+import { type Todo } from '../../store/todosSlice';
+import EditTodo from '@components/EditTodo/EditTodo';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeHooks/useTheme';
+import { useTheme } from '@context/ThemeHooks/useTheme';
+import { useTodoSave} from '@/hooks/useTodoSave';
 
 interface TodoItemProps {
   todo: Todo;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+const TodoItem: FC<TodoItemProps> = ({ todo }) => {
   const dispatch = useAppDispatch();
   const {theme} = useTheme();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(todo.text);
-
-  const handleSave = () => {
-    if (editText.trim() !== '') {
-      dispatch(updateTodo({ 
-        id: todo.id, 
-        updates: { text: editText } 
-      }));
-      setIsEditing(false);
-    }
-  };
-
+  const {
+    isEditing,
+    editText,
+    setEditText,
+    handleSave,
+    setIsEditing
+  } = useTodoSave(todo);
   return (
     <Wrapper theme = {theme}>
       {isEditing ? (
@@ -37,8 +33,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       ) : (
         <>
           <div>
-          
-            <TodoText theme={theme} completed={todo.completed}
+            <TodoText theme={theme} $completed={todo.completed}
               onClick={() => dispatch(toggleTodo(todo.id))
                 
               }
@@ -76,15 +71,15 @@ interface ThemeProps {
 }
 
 interface TodoTextProps extends ThemeProps {
-  completed: boolean;
+  $completed: boolean;
 }
 
 
 const TodoText = styled.span<TodoTextProps>`
   margin-left: 8px;
-  text-decoration: ${(props) => (props.completed ? 'line-through' : 'none')};
+  text-decoration: ${(props) => (props.$completed ? 'line-through' : 'none')};
   color: ${(props) => {
-    if (props.completed) {
+    if (props.$completed) {
       return props.theme === 'dark' ? '#666' : '#999';
     }
     return props.theme === 'dark' ? '#ccc' : '#000';
