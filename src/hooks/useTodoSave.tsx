@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useAppDispatch } from '@store/store';
+import { useAppDispatch } from '@/store/store';
 import { type Todo } from '../store/todosSlice';
-import { updateTodo } from '@store/todosSlice';
+import { updateTodo } from '@/store/todosSlice';
 
 export const useTodoSave = (todo: Todo) => {
   const dispatch = useAppDispatch();

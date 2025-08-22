@@ -5,7 +5,7 @@ import {
   createTodo,
   setCurrentPage,
   setItemsPerPage,
-} from '@store/todosSlice';
+} from '@/store/todosSlice';
 import { useEffect, type ChangeEvent } from 'react';
 
 export const useTodoListLogic = () => {

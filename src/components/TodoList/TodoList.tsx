@@ -1,11 +1,11 @@
 import { type FC } from 'react';
 import styled from 'styled-components';
 import { useTodoListLogic } from '../../hooks/useTodosLogic';
-import AddTodo from '@components/AddTodo/AddTodo';
-import TodoItem from '@components/TodoItem/TodoItem';
-import PaginationControls from '@components/TodoPagination/TodoPagination';
-import { fetchTodos } from '@store/todosSlice';
-import { useAppDispatch } from '../../store/store';
+import AddTodo from '@/components/AddTodo/AddTodo';
+import TodoItem from '@/components/TodoItem/TodoItem';
+import PaginationControls from '@/components/TodoPagination/TodoPagination';
+import { fetchTodos } from '@/store/todosSlice';
+import { useAppDispatch } from '@/store/store';
 
 
 const TodoList: FC = () => {

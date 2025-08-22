@@ -1,10 +1,10 @@
 import {  type FC } from 'react';
-import { useAppDispatch } from '@store/store';
-import { toggleTodo, deleteTodo} from '@store/todosSlice';
+import { useAppDispatch } from '@/store/store';
+import { toggleTodo, deleteTodo} from '@/store/todosSlice';
 import { type Todo } from '../../store/todosSlice';
-import EditTodo from '@components/EditTodo/EditTodo';
+import EditTodo from '@/components/EditTodo/EditTodo';
 import styled from 'styled-components';
-import { useTheme } from '@context/ThemeHooks/useTheme';
+import { useTheme } from '@/context/ThemeHooks/useTheme';
 import { useTodoSave} from '@/hooks/useTodoSave';
 
 interface TodoItemProps {

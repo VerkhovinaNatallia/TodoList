@@ -1,5 +1,5 @@
 import React, { useState, useEffect, type FC } from "react";
-import { ThemeContext } from "@context/ThemeContext/ThemeContext";
+import { ThemeContext } from "@/context/ThemeContext/ThemeContext";
 import type { Theme } from "../ThemeContext/ThemeContext";
 
 
@@ -10,13 +10,13 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme"); //загружает тему при 1 рендере
+    const saved = localStorage.getItem("theme"); 
     if (saved === "dark") setTheme("dark");
   }, []);
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
-    document.documentElement.setAttribute("data-theme", theme); // установили дата отрибут
+    document.documentElement.setAttribute("data-theme", theme); 
   }, [theme]);
 
   const toggleTheme = () =>

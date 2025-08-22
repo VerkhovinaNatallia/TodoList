@@ -23,11 +23,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@context/*": ["./src/context/*"],
-      "@store":  ["./src/store/*"]
+       "@/*": ["src/*"]
     },
-  "include": ["src"]
+   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
 }

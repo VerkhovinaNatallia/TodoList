@@ -1,6 +1,6 @@
 import { useState, type FC } from "react";
 import styled from "styled-components";
-import { useTheme } from "@context/ThemeHooks/useTheme";
+import { useTheme } from "@/context/ThemeHooks/useTheme";
 
 interface Props {
   onAdd: (text: string) => void;
@@ -8,7 +8,7 @@ interface Props {
 
 const AddTodo: FC<Props> = ({ onAdd }) => {
   const { theme } = useTheme();
-  const [text, setText] = useState(""); //поле ввода
+  const [text, setText] = useState("");
   const [error, setError] = useState("");
 
   const handleAdd = () => {

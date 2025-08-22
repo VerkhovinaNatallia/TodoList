@@ -1,11 +1,11 @@
-import { useTheme } from "@context/ThemeHooks/useTheme";
 import styled from "styled-components";
+import { useTheme } from "@/context/ThemeHooks/useTheme";
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <ThemedButton theme={theme} onClick={toggleTheme}>
+    <ThemedButton $theme={theme} onClick={toggleTheme}>
       Переключить на {theme === "light" ? "🌙 Темную" : "☀️ Светлую"} тему
     </ThemedButton>
   );
@@ -13,7 +13,7 @@ const ThemeToggle = () => {
 
 export default ThemeToggle;
 
-const ThemedButton = styled.button<{ theme: "light" | "dark" }>`
+const ThemedButton = styled.button<{ $theme: "light" | "dark" }>`
   padding: 10px 16px;
   font-size: 16px;
   border: none;
