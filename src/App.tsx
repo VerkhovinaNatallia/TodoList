@@ -1,10 +1,20 @@
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import styled from "styled-components";
-import ThemeToggle from "@/components/ThemeToggle";
-import { ThemeProvider } from "@/context/ThemeProvider/ThemeProvaider";
-import { useTheme } from "@/context/ThemeHooks/useTheme";
-import TodoList from "@/components/TodoList/TodoList";
+import { ThemeProvider } from "./context/ThemeProvider/ThemeProvaider";
+import { useTheme } from "./context/ThemeHooks/useTheme";
 import { Container } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch } from "./store/store";
+import { useEffect, type FC } from "react";
+import { fetchUserProfile, selectAuthToken } from "./store/auth/authSlice";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import LoginForm from "./pages/LoginForm";
+import RegisterForm from "./pages/RegisterForm";
+import Navigation from "./components/Navigation/Navigation";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 const lightTheme = { background: "white", text: "black" };
 const darkTheme = { background: "#121212", text: "white" };
@@ -19,27 +29,59 @@ const AppContainer = styled.div<{ theme: Theme }>`
   color: ${({ theme }) => theme.text};
 `;
 
-const InnerApp = () => {
+const ThemedApp = () => {
   const { theme } = useTheme();
-
   return (
     <StyledThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <AppContainer>
-        <ThemeToggle />
-        <Container>
-          <TodoList />
-        </Container>
+        <BrowserRouter>
+          <div className="app">
+            <Navigation />
+            <Container>
+              <Routes>
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterForm />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <HomePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Container>
+          </div>
+        </BrowserRouter>
       </AppContainer>
     </StyledThemeProvider>
   );
 };
 
-function App() {
+const App: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector(selectAuthToken);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchUserProfile());
+    }
+  }, [token, dispatch]);
+
   return (
     <ThemeProvider>
-      <InnerApp />
+      <ThemedApp />
     </ThemeProvider>
   );
-}
+};
 
 export default App;

@@ -1,13 +1,13 @@
 import { useState, type FC } from "react";
 import styled from "styled-components";
-import { useTheme } from "@/context/ThemeHooks/useTheme";
 
 interface Props {
   onAdd: (text: string) => void;
 }
 
+
+
 const AddTodo: FC<Props> = ({ onAdd }) => {
-  const { theme } = useTheme();
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
@@ -22,7 +22,7 @@ const AddTodo: FC<Props> = ({ onAdd }) => {
   };
 
   return (
-    <Container theme={theme}>
+    <Container>
       <div>
         <input
           type="text"
@@ -32,7 +32,7 @@ const AddTodo: FC<Props> = ({ onAdd }) => {
         />
         <button onClick={handleAdd}>Добавить</button>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
     </Container>
   );
 };

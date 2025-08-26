@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useTheme } from "@/context/ThemeHooks/useTheme";
+import { useTheme } from "../context/ThemeHooks/useTheme";
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();

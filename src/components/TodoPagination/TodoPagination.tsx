@@ -14,7 +14,7 @@ interface PaginationControlsProps {
   totalPages: number;
   itemsPerPage: number;
   totalCount: number;
-  isLoading: boolean; 
+  isLoading: boolean;
   onPageChange: (event: ChangeEvent<unknown>, page: number) => void;
   onItemsPerPageChange: (event: SelectChangeEvent<number>) => void;
 }
@@ -31,6 +31,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
   const handleItemsPerPageChange = (event: SelectChangeEvent<number>) => {
     onItemsPerPageChange(event);
   };
+  console.log(totalCount);
   return (
     <Box
       sx={{
