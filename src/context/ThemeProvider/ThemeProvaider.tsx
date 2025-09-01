@@ -1,8 +1,6 @@
 import React, { useState, useEffect, type FC } from "react";
 import { ThemeContext } from "@/context/ThemeContext/ThemeContext";
-import type { Theme } from "../ThemeContext/ThemeContext";
-
-
+import type { Theme } from "@/context/ThemeContext/ThemeContext";
 
 export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
   children,
@@ -10,13 +8,13 @@ export const ThemeProvider: FC<{ children: React.ReactNode }> = ({
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme"); 
+    const saved = localStorage.getItem("theme");
     if (saved === "dark") setTheme("dark");
   }, []);
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
-    document.documentElement.setAttribute("data-theme", theme); 
+    document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const toggleTheme = () =>

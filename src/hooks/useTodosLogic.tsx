@@ -1,57 +1,52 @@
-import type { SelectChangeEvent } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import type { SelectChangeEvent } from "@mui/material";
+import { useEffect, type ChangeEvent, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
-  fetchTodos,
   createTodo,
+  fetchTodos,
   setCurrentPage,
   setItemsPerPage,
-} from '@/store/todosSlice';
-import { useEffect, type ChangeEvent } from 'react';
+} from "@/store/todos/todosSlice";
 
 export const useTodoListLogic = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector((state) => state.todos);
 
-  useEffect(() => { 
-    const loadData = async () => {
-      try {
-        await dispatch(fetchTodos()).unwrap();
-      } catch (err) {
-        console.error('Ошибка загрузки:', err);
-      }
-    };
+  const totalPages = useMemo(() => {
+    return Math.ceil(state.totalCount / state.itemsPerPage) || 1;
+  }, [state.totalCount, state.itemsPerPage]);
 
-    loadData();
-
-    return () => {};
+  useEffect(() => {
+    dispatch(fetchTodos());
   }, [dispatch, state.currentPage, state.itemsPerPage]);
 
   const handleAddTodo = async (text: string) => {
     if (!text.trim()) return;
-    
+
     try {
       await dispatch(createTodo(text)).unwrap();
-      
       if (state.currentPage !== 1) {
         dispatch(setCurrentPage(1));
       }
     } catch (err) {
-      console.error('Ошибка при добавлении:', err);
+      console.error("Ошибка при добавлении:", err);
     }
   };
 
   const handlePageChange = (_: ChangeEvent<unknown>, page: number) => {
+    if (page < 1 || page > totalPages) return;
     dispatch(setCurrentPage(page));
   };
 
   const handleItemsPerPageChange = (event: SelectChangeEvent<number>) => {
-    dispatch(setItemsPerPage(Number(event.target.value)));
+    const newItemsPerPage = Number(event.target.value);
+    dispatch(setItemsPerPage(newItemsPerPage));
     dispatch(setCurrentPage(1));
   };
 
-
   return {
     ...state,
+    totalPages,
     handleAddTodo,
     handlePageChange,
     handleItemsPerPageChange,

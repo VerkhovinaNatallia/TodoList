@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useAppDispatch } from '@/store/store';
-import { type Todo } from '../store/todosSlice';
-import { updateTodo } from '@/store/todosSlice';
+import { useState } from "react";
+
+import type { Todo } from "@/types/types";
+import { useAppDispatch } from "@/store/store";
+import { updateTodo } from "@/store/todos/todosSlice";
 
 export const useTodoSave = (todo: Todo) => {
   const dispatch = useAppDispatch();
@@ -9,11 +10,13 @@ export const useTodoSave = (todo: Todo) => {
   const [editText, setEditText] = useState(todo.text);
 
   const handleSave = () => {
-    if (editText.trim() !== '') {
-      dispatch(updateTodo({ 
-        id: todo.id, 
-        updates: { text: editText } 
-      }));
+    if (editText.trim() !== "") {
+      dispatch(
+        updateTodo({
+          id: todo.id,
+          updates: { text: editText },
+        })
+      );
       setIsEditing(false);
     }
   };
@@ -28,6 +31,6 @@ export const useTodoSave = (todo: Todo) => {
     setEditText,
     handleSave,
     handleCancelEdit,
-    setIsEditing
+    setIsEditing,
   };
 };

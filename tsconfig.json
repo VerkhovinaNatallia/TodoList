@@ -1,21 +1,24 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
+  // "files": [],
     "compilerOptions": {
+     "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "types": ["styled-components"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
+"target": "ES2015",
     "baseUrl": ".",
+
     "paths": {
       "@/*": ["src/*"],
+
   }
   
-}
+},
+"include": ["src", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 
 }
