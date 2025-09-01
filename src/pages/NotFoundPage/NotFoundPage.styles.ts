@@ -1,31 +1,8 @@
-import  { type FC } from "react";
+import { ThemeProps } from "@/types/types";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useTheme } from "../context/ThemeHooks/useTheme";
 
-interface ThemeProps {
-  theme: "light" | "dark";
-}
-
-const NotFoundPage: FC = () => {
-  const { theme } = useTheme();
-
-  return (
-    <Container theme={theme}>
-      <h1>404</h1>
-
-      <h2>Страница не найдена</h2>
-
-      <HomeLink to="/" theme={theme}>
-        На главную
-      </HomeLink>
-    </Container>
-  );
-};
-
-export default NotFoundPage;
-
-const Container = styled.div<ThemeProps>`
+export const Container = styled.div<ThemeProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,7 +38,7 @@ const Container = styled.div<ThemeProps>`
   }
 `;
 
-const HomeLink = styled(Link)<ThemeProps>`
+export const HomeLink = styled(Link)<ThemeProps>`
   display: inline-flex;
   align-items: center;
   padding: 12px 24px;

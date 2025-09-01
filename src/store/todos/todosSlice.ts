@@ -6,9 +6,9 @@ import {
   fetchTodosApi,
   toggleTodoApi,
   updateTodoApi,
-} from "./todosAPI";
-import type { Todo, TodosState } from "../../types/types";
-import type { RootState } from "../store";
+} from "@/store/todos/todosAPI";
+import type { Todo, TodosState } from "@/types/types";
+import type { RootState } from "@/store/store";
 
 const initialState: TodosState = {
   items: [],
@@ -107,7 +107,7 @@ const todosSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    clearError(state) {
+    clearErrors(state) {
       state.error = null;
     },
     setCurrentPage(state, action: PayloadAction<number>) {
@@ -132,11 +132,6 @@ const todosSlice = createSlice({
         state.itemsPerPage =
           action.payload.pagination?.limit || state.itemsPerPage;
         state.totalPages = action.payload.pagination?.totalPages || 1;
-
-        console.log("Fetched todos:", {
-          received: action.payload.pagination,
-          currentState: state,
-        });
       })
       .addCase(fetchTodos.rejected, (state, action) => {
         state.isLoading = false;
@@ -207,6 +202,6 @@ const todosSlice = createSlice({
   },
 });
 
-export const { clearError, setCurrentPage, setItemsPerPage } =
+export const { clearErrors, setCurrentPage, setItemsPerPage } =
   todosSlice.actions;
 export default todosSlice.reducer;

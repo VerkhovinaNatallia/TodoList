@@ -1,20 +1,16 @@
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import styled from "styled-components";
-import { ThemeProvider } from "./context/ThemeProvider/ThemeProvaider";
-import { useTheme } from "./context/ThemeHooks/useTheme";
-import { Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch } from "./store/store";
 import { useEffect, type FC } from "react";
-import { fetchUserProfile, selectAuthToken } from "./store/auth/authSlice";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
-import NotFoundPage from "./pages/NotFoundPage";
-import LoginForm from "./pages/LoginForm";
-import RegisterForm from "./pages/RegisterForm";
-import Navigation from "./components/Navigation/Navigation";
-import ProtectedRoute from "./components/ProtectedRoutes";
+import { Container } from "@mui/material";
+
+import { ThemeProvider, useTheme } from "@/context";
+
+import { ProfilePage, NotFoundPage,LoginForm, RegisterForm, HomePage } from "@/pages";
+import { Navigation,ProtectedRoute } from '@/components'
+import { fetchUserProfile, selectAuthToken } from "@/store/auth/authSlice";
+import { AppDispatch } from "@/store/store";
 
 const lightTheme = { background: "white", text: "black" };
 const darkTheme = { background: "#121212", text: "white" };

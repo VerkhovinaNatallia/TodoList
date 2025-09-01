@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import todosReducer from "./todos/todosSlice";
-import authReducer from "./auth/authSlice";
+import todosReducer from "@/store/todos/todosSlice";
+import authReducer from "@/store/auth/authSlice";
 import {
   useDispatch,
   useSelector,

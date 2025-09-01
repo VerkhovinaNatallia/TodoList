@@ -6,9 +6,10 @@ import type {
   LoginData,
   RegisterData,
   User,
-} from "../../types/types";
-import type { RootState } from "../store";
-import { authAPI } from "./authAPI";
+} from "@/types/types";
+
+import { authAPI } from "@/store/auth/authAPI";
+import { RootState } from "@/store/store";
 
 const initialState: AuthState = {
   user: null,
@@ -50,10 +51,8 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await authAPI.login(credentials);
       const { accessToken, refreshToken, user } = response.data;
-
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-
       return { user, token: accessToken, refreshToken };
     } catch (error) {
       const axiosError = error as AxiosErrorResponse;

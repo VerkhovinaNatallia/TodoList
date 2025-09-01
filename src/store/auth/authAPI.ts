@@ -4,14 +4,14 @@ import type {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import type { AuthResponse, LoginData, RegisterData } from "../../types/types";
-import { handleLogout } from "./authSlice";
+import type { AuthResponse, LoginData, RegisterData } from "@/types/types";
+import { handleLogout } from "@/store/auth/authSlice"; 
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

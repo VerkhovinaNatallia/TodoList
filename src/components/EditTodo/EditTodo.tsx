@@ -8,7 +8,7 @@ interface EditTodoProps {
   onCancel: () => void;
 }
 
-const EditTodo: FC<EditTodoProps> = ({
+export const EditTodo: FC<EditTodoProps> = ({
   text,
   onChange,
   onSave,
@@ -34,4 +34,3 @@ const EditTodo: FC<EditTodoProps> = ({
   );
 };
 
-export default EditTodo;

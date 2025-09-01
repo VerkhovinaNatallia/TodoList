@@ -1,3 +1,7 @@
+export interface ThemeProps {
+  theme: "light" | "dark";
+}
+
 export interface User {
   id: number;
   email: string;

@@ -1,12 +1,12 @@
 import type { SelectChangeEvent } from "@mui/material";
 import { useEffect, type ChangeEvent, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   createTodo,
   fetchTodos,
   setCurrentPage,
   setItemsPerPage,
-} from "../store/todos/todosSlice";
+} from "@/store/todos/todosSlice";
 
 export const useTodoListLogic = () => {
   const dispatch = useAppDispatch();

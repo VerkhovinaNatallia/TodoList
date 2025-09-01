@@ -9,6 +9,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { type SelectChangeEvent } from "@mui/material/Select";
+
 interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
@@ -19,7 +20,7 @@ interface PaginationControlsProps {
   onItemsPerPageChange: (event: SelectChangeEvent<number>) => void;
 }
 
-const PaginationControls: FC<PaginationControlsProps> = ({
+export const PaginationControls: FC<PaginationControlsProps> = ({
   currentPage,
   totalPages,
   itemsPerPage,
@@ -31,7 +32,6 @@ const PaginationControls: FC<PaginationControlsProps> = ({
   const handleItemsPerPageChange = (event: SelectChangeEvent<number>) => {
     onItemsPerPageChange(event);
   };
-  console.log(totalCount);
   return (
     <Box
       sx={{
@@ -73,5 +73,3 @@ const PaginationControls: FC<PaginationControlsProps> = ({
     </Box>
   );
 };
-
-export default PaginationControls;

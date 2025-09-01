@@ -1,7 +1,7 @@
 import { type FC } from "react";
-import TodoList from "../components/TodoList/TodoList";
+import {TodoList} from "@/components";
 
-const HomePage: FC = () => {
+export const HomePage: FC = () => {
   return (
     <div className="home-page">
       <h1>Добро пожаловать!</h1>
@@ -11,4 +11,4 @@ const HomePage: FC = () => {
   );
 };
 
-export default HomePage;
+
